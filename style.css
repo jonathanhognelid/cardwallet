@@ -1,0 +1,266 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #0a0a0a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+.scene {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 48px;
+}
+
+/* Wallet container — overflow visible so card can lift out */
+.wallet {
+  position: relative;
+  width: 340px;
+  height: 221px;
+  overflow: visible;
+}
+
+/* Wallet back — overflow hidden so docked card gets clipped */
+.wallet-back {
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  overflow: hidden;
+  background: linear-gradient(122.127deg, rgb(41,41,41) 0%, rgb(20,20,20) 100%);
+  box-shadow:
+    0px 0px 8px rgba(0,0,0,0.08),
+    0px 2px 24px rgba(0,0,0,0.12),
+    inset -1px -1px 4px 0px rgba(25,25,25,0.6),
+    inset 1px 1px 2px 0px rgba(77,77,77,0.4);
+  z-index: 1;
+}
+
+.wallet-back::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 332px;
+  height: 213px;
+  border-radius: 20px;
+  border: 1px solid rgba(25,25,25,0.8);
+  pointer-events: none;
+}
+
+/* Card — z-index 2 so it sits above wallet-back */
+.card {
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 318px;
+  height: 201px;
+  border-radius: 16px;
+  z-index: 2;
+  pointer-events: none;
+  transform-style: preserve-3d;
+  transition: transform 600ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Lifted — card above wallet front (z-index 6) */
+.card.lifted {
+  transform: translateY(calc(-50% - 160px));
+  z-index: 6;
+}
+
+/* Landed on top — stays above wallet front */
+.card.ontop {
+  transform: translateY(-50%);
+  z-index: 6;
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border-radius: 16px;
+}
+
+.card-inner.flipped {
+  transform: rotateY(180deg);
+}
+
+.card-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.card-front {
+  background-image: url('assets/card.png');
+  background-size: cover;
+  box-shadow:
+    inset -1px -1px 0px rgba(0,0,0,0.6),
+    inset 1px 1px 1px rgba(255,255,255,0.15),
+    0px 4px 8px rgba(0,0,0,0.3);
+}
+
+.card-back {
+  background-image: url('assets/card.png');
+  background-size: cover;
+  background-color: transparent;
+  transform: rotateY(180deg);
+  overflow: hidden;
+  box-shadow:
+    0px 8px 32px rgba(0,0,0,0.3),
+    0px 2px 8px rgba(0,0,0,0.2);
+}
+
+.card-details-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(122.296deg, rgba(255,255,255,0.12) 0.84%, rgba(0,0,0,0.3) 100%);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border-radius: 16px;
+}
+
+.card-detail {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 1;
+}
+
+.card-detail.top-left {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+}
+
+.card-details-bottom {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  z-index: 1;
+}
+
+.card-detail .label {
+  font-size: 10px;
+  color: #f7f8f7;
+  opacity: 0.6;
+  font-family: sans-serif;
+}
+
+.card-detail .value {
+  font-size: 10px;
+  color: #f7f8f7;
+  font-family: sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Wallet front — z-index 3, sits above docked card (2) but below lifted (6) */
+.wallet-front-wrap {
+  position: absolute;
+  left: 0;
+  top: 77px;
+  width: 340px;
+  height: 144px;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.wallet-front-wrap img {
+  position: absolute;
+  top: -11.11%;
+  left: -3.53%;
+  width: calc(100% + 7.06%);
+  height: calc(100% + 16.67%);
+  display: block;
+}
+
+.stitching-wrap {
+  position: absolute;
+  left: 4px;
+  top: 83px;
+  width: 332px;
+  height: 134px;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.stitching-wrap img {
+  position: absolute;
+  top: -0.37%;
+  left: -0.15%;
+  width: calc(100% + 0.3%);
+  height: calc(100% + 0.74%);
+  display: block;
+}
+
+.wallet-hint {
+  position: absolute;
+  left: 0;
+  bottom: 14px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 19px;
+  z-index: 5;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+
+.wallet-hint.visible {
+  opacity: 1;
+}
+
+.hint-text {
+  font-size: 12px;
+  color: transparent;
+  background: linear-gradient(96deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.4) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  font-family: sans-serif;
+}
+
+.card-number-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.dots { width: 28px; height: 4px; }
+
+.last-four {
+  font-size: 12px;
+  color: transparent;
+  background: linear-gradient(91deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.4) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  font-family: sans-serif;
+}
+
+button {
+  background: #313533;
+  color: #f7f8f7;
+  border: none;
+  border-radius: 999px;
+  padding: 0 24px;
+  height: 48px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 150ms ease, background 150ms ease;
+}
+
+button:hover { background: #3d403e; }
+button:active { transform: scale(0.96); }

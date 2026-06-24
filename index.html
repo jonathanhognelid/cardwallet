@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wallet Card</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="scene">
+    <div class="wallet">
+
+      <div class="wallet-back"></div>
+
+      <div class="card" id="card">
+        <div class="card-inner" id="cardInner">
+          <div class="card-face card-front"></div>
+          <div class="card-face card-back">
+            <div class="card-details-overlay"></div>
+            <div class="card-detail top-left">
+              <span class="label">Kortinnehavare</span>
+              <span class="value">Högnelid, Jonathan</span>
+            </div>
+            <div class="card-details-bottom">
+              <div class="card-detail">
+                <span class="label">Kortnummer</span>
+                <span class="value">5356 8302 1219 6566</span>
+              </div>
+              <div class="card-detail">
+                <span class="label">EXP</span>
+                <span class="value">10/29</span>
+              </div>
+              <div class="card-detail">
+                <span class="label">CVC</span>
+                <span class="value">565</span>
+              </div>
+              <div class="card-detail">
+                <span class="label">PIN</span>
+                <span class="value">7497</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="wallet-front-wrap">
+        <img src="assets/walletfront.svg" alt="" />
+      </div>
+      <div class="stitching-wrap">
+        <img src="assets/stitching.svg" alt="" />
+      </div>
+
+      <div class="wallet-hint" id="hint">
+        <span class="hint-text">Click to see card details</span>
+        <div class="card-number-row">
+          <img src="assets/dots.svg" alt="" class="dots" />
+          <span class="last-four">4202</span>
+        </div>
+      </div>
+
+    </div>
+    <button id="btn">Show details</button>
+  </div>
+  <script src="main.js"></script>
+</body>
+</html>
