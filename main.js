@@ -1,23 +1,21 @@
 const card = document.getElementById('card');
 const cardInner = document.getElementById('cardInner');
+const cardBack = document.querySelector('.card-back');
 const btn = document.getElementById('btn');
-const hint = document.getElementById('hint');
 const panel = document.getElementById('panel');
-const freezeOverlay = document.getElementById('freezeOverlay');
 const toggleFreeze = document.getElementById('toggleFreeze');
-const togglePin = document.getElementById('togglePin');
-const toggleDetails = document.getElementById('toggleDetails');
-const pinValue = document.getElementById('pinValue');
+const toggleCvc = document.getElementById('toggleCvc');
+const toggleNumber = document.getElementById('toggleNumber');
+const rowCvc = document.getElementById('rowCvc');
+const rowNumber = document.getElementById('rowNumber');
+const cvcValue = document.getElementById('cvcValue');
 const cardNumber = document.getElementById('cardNumber');
 
 let state = 'docked';
 
 btn.addEventListener('click', () => {
-  if (state === 'docked') {
-    expand();
-  } else if (state === 'expanded') {
-    collapse();
-  }
+  if (state === 'docked') expand();
+  else if (state === 'expanded') collapse();
 });
 
 function expand() {
@@ -40,8 +38,7 @@ function expand() {
       card.classList.add('ontop');
 
       setTimeout(() => {
-        hint.classList.add('visible');
-        btn.classList.add('icon-state');
+        btn.classList.add('opened');
         btn.disabled = false;
         state = 'expanded';
       }, 600);
@@ -53,17 +50,18 @@ function collapse() {
   if (state !== 'expanded') return;
   state = 'animating';
   btn.disabled = true;
-
-  hint.classList.remove('visible');
+  btn.classList.remove('opened');
   panel.classList.remove('open');
-  btn.classList.remove('icon-state');
 
+  // Reset all toggles and card state
   setToggle(toggleFreeze, false);
-  setToggle(togglePin, false);
-  setToggle(toggleDetails, false);
-  freezeOverlay.classList.remove('active');
-  pinValue.textContent = '••••';
-  cardNumber.textContent = '•••• •••• •••• ••••';
+  setToggle(toggleCvc, false);
+  setToggle(toggleNumber, false);
+  cardBack.classList.remove('frozen');
+  rowCvc.classList.remove('disabled');
+  rowNumber.classList.remove('disabled');
+  cvcValue.textContent = '000';
+  cardNumber.textContent = '0000 0000 0000 0000';
 
   card.classList.remove('ontop');
   card.classList.add('lifted');
@@ -88,15 +86,66 @@ function setToggle(el, on) {
   el.setAttribute('aria-checked', on);
 }
 
-function animateReveal(el, hiddenText, revealText) {
-  el.style.opacity = '0';
-  setTimeout(() => {
-    el.textContent = revealText;
-    el.style.opacity = '1';
-  }, 300);
+function makeDigitSlot(fromChar, toChar) {
+  const slot = document.createElement('span');
+  slot.className = 'digit-slot';
+
+  const track = document.createElement('span');
+  track.className = 'digit-track';
+
+  const rowNew = document.createElement('span');
+  rowNew.className = 'digit-row';
+  rowNew.textContent = toChar;
+
+  const rowOld = document.createElement('span');
+  rowOld.className = 'digit-row';
+  rowOld.textContent = fromChar;
+
+  // New sits above old in the track; track starts shifted to show "old"
+  track.appendChild(rowNew);
+  track.appendChild(rowOld);
+  slot.appendChild(track);
+  return slot;
 }
 
-// Clicking anywhere on the row triggers the toggle
+function animateDigits(el, hiddenText, revealText, on) {
+  const fromText = on ? hiddenText : revealText;
+  const toText = on ? revealText : hiddenText;
+
+  el.innerHTML = '';
+  const frag = document.createDocumentFragment();
+  const tracks = [];
+
+  for (let i = 0; i < toText.length; i++) {
+    const fromChar = fromText[i] ?? ' ';
+    const toChar = toText[i] ?? ' ';
+
+    if (fromChar === toChar) {
+      const span = document.createElement('span');
+      span.textContent = toChar === ' ' ? '\u00A0' : toChar;
+      frag.appendChild(span);
+    } else {
+      const fc = fromChar === ' ' ? '\u00A0' : fromChar;
+      const tc = toChar === ' ' ? '\u00A0' : toChar;
+      const slot = makeDigitSlot(fc, tc);
+      frag.appendChild(slot);
+      tracks.push(slot.querySelector('.digit-track'));
+    }
+  }
+
+  el.appendChild(frag);
+
+  // Trigger the roll, staggered per digit
+  requestAnimationFrame(() => {
+    tracks.forEach((track, idx) => {
+      setTimeout(() => {
+        track.classList.add('rolled');
+      }, idx * 55);
+    });
+  });
+}
+
+// Row clicks trigger toggle
 document.querySelectorAll('.toggle-row').forEach(row => {
   row.addEventListener('click', () => {
     const toggle = row.querySelector('.toggle');
@@ -104,26 +153,41 @@ document.querySelectorAll('.toggle-row').forEach(row => {
   });
 });
 
-// But stop toggle button clicks from double-firing
+// Freeze — single class drives all visual layers via CSS
 toggleFreeze.addEventListener('click', (e) => {
   e.stopPropagation();
   const on = !toggleFreeze.classList.contains('on');
   setToggle(toggleFreeze, on);
-  freezeOverlay.classList.toggle('active', on);
+  cardBack.classList.toggle('frozen', on);
+
+  // Disable the other two toggles while frozen, and turn them off first if active
+  rowCvc.classList.toggle('disabled', on);
+  rowNumber.classList.toggle('disabled', on);
+
+  if (on) {
+    if (toggleCvc.classList.contains('on')) {
+      setToggle(toggleCvc, false);
+      animateDigits(cvcValue, '000', '565', false);
+    }
+    if (toggleNumber.classList.contains('on')) {
+      setToggle(toggleNumber, false);
+      animateDigits(cardNumber, '0000 0000 0000 0000', '5356 8302 1219 6566', false);
+    }
+  }
 });
 
-togglePin.addEventListener('click', (e) => {
+toggleCvc.addEventListener('click', (e) => {
   e.stopPropagation();
-  const on = !togglePin.classList.contains('on');
-  setToggle(togglePin, on);
-  animateReveal(pinValue, '••••', on ? '7497' : '••••');
+  const on = !toggleCvc.classList.contains('on');
+  setToggle(toggleCvc, on);
+  animateDigits(cvcValue, '000', '565', on);
 });
 
-toggleDetails.addEventListener('click', (e) => {
+toggleNumber.addEventListener('click', (e) => {
   e.stopPropagation();
-  const on = !toggleDetails.classList.contains('on');
-  setToggle(toggleDetails, on);
-  animateReveal(cardNumber, '•••• •••• •••• ••••', on ? '5356 8302 1219 6566' : '•••• •••• •••• ••••');
+  const on = !toggleNumber.classList.contains('on');
+  setToggle(toggleNumber, on);
+  animateDigits(cardNumber, '0000 0000 0000 0000', '5356 8302 1219 6566', on);
 });
 
 lucide.createIcons();

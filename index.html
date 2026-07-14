@@ -6,7 +6,7 @@
   <title>Wallet Card</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono:wght@400&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 </head>
@@ -20,42 +20,37 @@
 
         <div class="card" id="card">
           <div class="card-inner" id="cardInner">
-            <div class="card-face card-front">
-              <div class="freeze-overlay" id="freezeOverlay"></div>
-            </div>
-            <div class="card-face card-back">
-              <div class="card-details-overlay"></div>
-              <div class="card-detail top-left">
-                <span class="label">Kortinnehavare</span>
-                <span class="value">Högnelid, Jonathan</span>
-              </div>
-              <div class="card-details-bottom">
-                <div class="card-detail">
-                  <span class="label">Kortnummer</span>
-                  <span class="value card-number" id="cardNumber">•••• •••• •••• ••••</span>
-                </div>
-                <div class="card-detail">
-                  <span class="label">EXP</span>
-                  <span class="value">10/29</span>
-                </div>
-                <div class="card-detail">
-                  <span class="label">CVC</span>
-                  <span class="value">565</span>
-                </div>
-                <div class="card-detail">
-                  <span class="label">PIN</span>
-                  <span class="value pin-value" id="pinValue">••••</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <div class="wallet-hint" id="hint">
-          <span class="hint-text">Click to see card details</span>
-          <div class="card-number-row">
-            <img src="assets/dots.svg" alt="" class="dots" />
-            <span class="last-four">4202</span>
+            <!-- Front face -->
+            <div class="card-face card-front"></div>
+
+            <!-- Back face -->
+            <div class="card-face card-back">
+              <div class="card-back-tint"></div>
+              <div class="freeze-tint"></div>
+              <div class="card-stripe"></div>
+              <div class="card-back-details">
+                <div class="card-back-name-number">
+                  <span class="card-back-label">APPLESEED JOHN</span>
+                  <span class="card-back-number" id="cardNumber">0000 0000 0000 0000</span>
+                </div>
+                <div class="card-back-addinfo">
+                  <div class="card-back-exp">
+                    <span class="card-back-label">EXP</span>
+                    <span class="card-back-mono">10/29</span>
+                  </div>
+                  <div class="card-back-cvc">
+                    <span class="card-back-label">CVC</span>
+                    <span class="card-back-mono cvc-value" id="cvcValue">000</span>
+                  </div>
+                </div>
+              </div>
+              <div class="freeze-blur-layer"></div>
+              <img src="assets/freeze-blur.png" alt="" class="freeze-blur-img patch-edge" />
+              <img src="assets/freeze-blur.png" alt="" class="freeze-blur-img patch-mid" />
+              <div class="card-inner-shadow"></div>
+            </div>
+
           </div>
         </div>
 
@@ -67,33 +62,33 @@
         </div>
       </div>
 
+      <!-- Panel -->
       <div class="panel" id="panel">
-        <div class="panel-inner">
-          <div class="toggle-row">
-            <span class="toggle-label">Freeze card</span>
-            <button class="toggle" id="toggleFreeze" role="switch" aria-checked="false">
-              <span class="toggle-thumb"></span>
-            </button>
-          </div>
-          <div class="toggle-row">
-            <span class="toggle-label">Show PIN</span>
-            <button class="toggle" id="togglePin" role="switch" aria-checked="false">
-              <span class="toggle-thumb"></span>
-            </button>
-          </div>
-          <div class="toggle-row">
-            <span class="toggle-label">Show card details</span>
-            <button class="toggle" id="toggleDetails" role="switch" aria-checked="false">
-              <span class="toggle-thumb"></span>
-            </button>
-          </div>
+        <div class="toggle-row" id="rowCvc">
+          <span class="toggle-label">Show CVC</span>
+          <button class="toggle" id="toggleCvc" role="switch" aria-checked="false">
+            <span class="toggle-thumb"></span>
+          </button>
+        </div>
+        <div class="toggle-row" id="rowNumber">
+          <span class="toggle-label">Show card number</span>
+          <button class="toggle" id="toggleNumber" role="switch" aria-checked="false">
+            <span class="toggle-thumb"></span>
+          </button>
+        </div>
+        <div class="toggle-row">
+          <span class="toggle-label">Freeze card</span>
+          <button class="toggle" id="toggleFreeze" role="switch" aria-checked="false">
+            <span class="toggle-thumb"></span>
+          </button>
         </div>
       </div>
 
+      <!-- Button -->
       <div class="btn-wrap">
         <button id="btn">
-          <span class="btn-label">Show details</span>
-          <i data-lucide="x" class="btn-icon"></i>
+          <i data-lucide="eye" class="btn-icon-eye"></i>
+          <i data-lucide="eye-off" class="btn-icon-eye-off"></i>
         </button>
       </div>
 
