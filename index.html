@@ -19,38 +19,49 @@
         <div class="wallet-back"></div>
 
         <div class="card" id="card">
-          <div class="card-inner" id="cardInner">
+          <div class="card-tilt" id="cardTilt">
+            <div class="card-inner" id="cardInner">
 
-            <!-- Front face -->
-            <div class="card-face card-front"></div>
+              <!-- Front face -->
+              <div class="card-face card-front"></div>
 
-            <!-- Back face -->
-            <div class="card-face card-back">
-              <div class="card-back-tint"></div>
-              <div class="freeze-tint"></div>
-              <div class="card-stripe"></div>
-              <div class="card-back-details">
-                <div class="card-back-name-number">
-                  <span class="card-back-label">APPLESEED JOHN</span>
-                  <span class="card-back-number" id="cardNumber">0000 0000 0000 0000</span>
-                </div>
-                <div class="card-back-addinfo">
-                  <div class="card-back-exp">
-                    <span class="card-back-label">EXP</span>
-                    <span class="card-back-mono">10/29</span>
+              <!-- Back face -->
+              <div class="card-face card-back">
+                <div class="card-back-tint"></div>
+                <div class="freeze-tint"></div>
+                <div class="card-stripe"></div>
+                <div class="card-back-details">
+                  <div class="card-back-name-number">
+                    <span class="card-back-label">APPLESEED JOHN</span>
+                    <span class="card-back-number" id="cardNumber">0000 0000 0000 0000</span>
                   </div>
-                  <div class="card-back-cvc">
-                    <span class="card-back-label">CVC</span>
-                    <span class="card-back-mono cvc-value" id="cvcValue">000</span>
+                  <div class="card-back-addinfo">
+                    <div class="card-back-exp">
+                      <span class="card-back-label">EXP</span>
+                      <span class="card-back-mono">10/29</span>
+                    </div>
+                    <div class="card-back-cvc">
+                      <span class="card-back-label">CVC</span>
+                      <span class="card-back-mono cvc-value" id="cvcValue">000</span>
+                    </div>
                   </div>
                 </div>
+                <div class="freeze-blur-layer"></div>
+                <img src="assets/freeze-blur.png" alt="" class="freeze-blur-img patch-edge" />
+                <img src="assets/freeze-blur.png" alt="" class="freeze-blur-img patch-mid" />
+
+                <div class="copy-btn-wrap">
+                  <div class="copy-tooltip" id="copyTooltip">Copy card number</div>
+                  <button class="copy-btn" id="copyBtn" aria-label="Copy card number">
+                    <i data-lucide="copy" class="copy-icon-default"></i>
+                    <i data-lucide="circle-check" class="copy-icon-success"></i>
+                  </button>
+                </div>
+
+                <div class="card-inner-shadow"></div>
               </div>
-              <div class="freeze-blur-layer"></div>
-              <img src="assets/freeze-blur.png" alt="" class="freeze-blur-img patch-edge" />
-              <img src="assets/freeze-blur.png" alt="" class="freeze-blur-img patch-mid" />
-              <div class="card-inner-shadow"></div>
-            </div>
 
+            </div>
           </div>
         </div>
 

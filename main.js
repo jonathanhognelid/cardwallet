@@ -10,6 +10,8 @@ const rowCvc = document.getElementById('rowCvc');
 const rowNumber = document.getElementById('rowNumber');
 const cvcValue = document.getElementById('cvcValue');
 const cardNumber = document.getElementById('cardNumber');
+const copyBtn = document.getElementById('copyBtn');
+const wallet = document.querySelector('.wallet');
 
 let state = 'docked';
 
@@ -52,6 +54,9 @@ function collapse() {
   btn.disabled = true;
   btn.classList.remove('opened');
   panel.classList.remove('open');
+
+  cardTilt.classList.remove('tilting');
+  cardTilt.style.transform = 'rotateX(0deg) rotateY(0deg)';
 
   // Reset all toggles and card state
   setToggle(toggleFreeze, false);
@@ -188,6 +193,46 @@ toggleNumber.addEventListener('click', (e) => {
   const on = !toggleNumber.classList.contains('on');
   setToggle(toggleNumber, on);
   animateDigits(cardNumber, '0000 0000 0000 0000', '5356 8302 1219 6566', on);
+});
+
+// Copy card number
+copyBtn.addEventListener('click', async () => {
+  const number = '5356830212196566';
+  try {
+    await navigator.clipboard.writeText(number);
+  } catch (err) {
+    console.error('Copy failed:', err);
+  }
+  copyBtn.classList.add('copied');
+  setTimeout(() => {
+    copyBtn.classList.remove('copied');
+  }, 1500);
+});
+
+// 3D tilt on hover — only active once the card is flipped and sitting on top
+const MAX_TILT = 2; // degrees
+const tiltZone = document.getElementById('cardContainer');
+const cardTilt = document.getElementById('cardTilt');
+
+tiltZone.addEventListener('mouseenter', () => {
+  if (state !== 'expanded') return;
+  cardTilt.classList.add('tilting');
+});
+
+tiltZone.addEventListener('mousemove', (e) => {
+  if (state !== 'expanded') return;
+  const rect = card.getBoundingClientRect();
+  const px = (e.clientX - rect.left) / rect.width - 0.5;
+  const py = (e.clientY - rect.top) / rect.height - 0.5;
+  const clamp = (v) => Math.max(-1, Math.min(1, v));
+  const rotateY = clamp(px * 2) * MAX_TILT;
+  const rotateX = -clamp(py * 2) * MAX_TILT;
+  cardTilt.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+});
+
+tiltZone.addEventListener('mouseleave', () => {
+  cardTilt.classList.remove('tilting');
+  cardTilt.style.transform = 'rotateX(0deg) rotateY(0deg)';
 });
 
 lucide.createIcons();

@@ -90,6 +90,19 @@ body {
     0px 2px 8px rgba(0,0,0,0.2);
 }
 
+/* Dedicated tilt wrapper — independent of .card's position transform and .card-inner's flip */
+.card-tilt {
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.card-tilt.tilting {
+  transition: none;
+}
+
 .card-inner {
   position: relative;
   width: 100%;
@@ -316,6 +329,111 @@ body {
     inset 1px 1px 1px rgba(255,255,255,0.15);
   pointer-events: none;
   z-index: 11;
+}
+
+/* Copy card number button */
+.copy-btn-wrap {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  z-index: 6;
+  pointer-events: auto;
+  opacity: 1;
+  transition: opacity 400ms ease;
+}
+
+.card-back.frozen .copy-btn-wrap {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.copy-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: background 150ms ease-out, transform 100ms ease-out;
+}
+
+.copy-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.copy-btn:active {
+  transform: scale(0.94);
+}
+
+.copy-icon-default,
+.copy-icon-success {
+  position: absolute;
+  stroke: #f7f8f7;
+  transition: opacity 150ms ease-out, transform 150ms ease-out, filter 150ms ease-out;
+}
+
+.copy-icon-default {
+  width: 16px;
+  height: 16px;
+  opacity: 1;
+  transform: scale(1);
+  filter: blur(0px);
+}
+
+.copy-icon-success {
+  width: 18px;
+  height: 18px;
+  opacity: 0;
+  transform: scale(0.85);
+  filter: blur(2px);
+}
+
+.copy-btn.copied .copy-icon-default {
+  opacity: 0;
+  transform: scale(0.85);
+  filter: blur(2px);
+}
+
+.copy-btn.copied .copy-icon-success {
+  opacity: 1;
+  transform: scale(1);
+  filter: blur(0px);
+}
+
+/* Tooltip */
+.copy-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: 0;
+  height: 24px;
+  padding: 8px 10px;
+  border-radius: 9999px;
+  background: linear-gradient(to bottom, #292929, #141414);
+  color: #e3e3e3;
+  font-family: 'Geist', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+ box-shadow:
+  0px 1px 8px 0px rgba(0, 0, 0, 0.12),
+  inset 1px 1px 1px 0px rgba(255, 255, 255, 0.1),
+  inset -1px -1px 1px 0px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  transform: translateY(4px);
+  pointer-events: none;
+  transition: opacity 150ms ease-out, transform 150ms ease-out;
+}
+
+.copy-btn-wrap:hover .copy-tooltip {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* Wallet overlays */
